@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/chartFragment"
+        android:title="Bảng xếp hạng"
+        android:icon="@drawable/ic_bar_chart"/>
+    <item android:id="@+id/favoriteFragment"
+        android:title="Yêu thích"
+        android:icon="@drawable/ic_baseline_favorite_24"/>
+    <item android:id="@+id/mySongFragment"
+        android:title="Nhạc của tôi"
+        android:icon="@drawable/ic_music"/>
+</menu>

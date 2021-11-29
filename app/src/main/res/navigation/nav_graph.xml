@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/chartFragment">
+
+    <fragment
+        android:id="@+id/chartFragment"
+        android:name="com.example.musicappmvvm.ui.main.fragments.ChartFragment"
+        android:label="ChartFragment"
+        tools:layout="@layout/fragment_chart"/>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.musicappmvvm.ui.main.fragments.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/fragment_favorite"/>
+    <fragment
+        android:id="@+id/mySongFragment"
+        android:name="com.example.musicappmvvm.ui.main.fragments.MySongFragment"
+        android:label="MySongFragment"
+        tools:layout="@layout/fragment_my_song"/>
+</navigation>
