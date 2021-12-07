@@ -19,7 +19,7 @@ class MySongFragment : Fragment() {
 
     companion object {
         var binding: FragmentMySongBinding? = null
-        var adapter: SongAdapter? = null
+        var mySongAdapter: SongAdapter? = null
         const val TAG = "MySongFragment"
     }
     lateinit var viewModel: MusicViewModel
@@ -30,19 +30,19 @@ class MySongFragment : Fragment() {
     ): View? {
         binding = FragmentMySongBinding.inflate(inflater, container, false)
         viewModel = (activity as MusicActivity).viewModel
-        adapter = SongAdapter(requireContext(), MY_SONG)
+        mySongAdapter = SongAdapter(requireContext(), MY_SONG)
         viewModel.getMySongList()
         viewModel.mySongs.observe(viewLifecycleOwner){
-            adapter!!.setData(it)
+            mySongAdapter!!.setData(it)
             setupRecyclerView()
         }
         return binding?.root
     }
 
     fun setupRecyclerView(){
-        binding?.rvMySongs?.adapter = adapter
+        binding?.rvMySongs?.adapter = mySongAdapter
         binding?.rvMySongs?.layoutManager = LinearLayoutManager(requireContext())
-        adapter?.setOnItemClickListener { song ->
+        mySongAdapter?.setOnItemClickListener { song ->
             Intent(requireContext(), PlayerActivity::class.java).also {
                 if (song.id == PlayerActivity.nowPlayingSong) {
                     it.putExtra(Constants.EXTRA_TYPE, Constants.CURRENT_SONG)

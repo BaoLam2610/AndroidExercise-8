@@ -10,6 +10,9 @@ import com.example.musicappmvvm.model.SongItem
 import com.example.musicappmvvm.model.related.RelatedStatus
 import com.example.musicappmvvm.repository.PlayerRepository
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.songList
+import com.example.musicappmvvm.utils.Constants
+import com.example.musicappmvvm.utils.Constants.EXTRA_MY_SONG
+import com.example.musicappmvvm.utils.Constants.EXTRA_SONG_FAVORITE
 import com.example.musicappmvvm.utils.Constants.hasInternetConnection
 import com.example.musicappmvvm.utils.Constants.toSongItem
 import com.example.musicappmvvm.utils.Resource
@@ -23,21 +26,31 @@ class PlayerViewModel(
     private val playerRepository: PlayerRepository
 ) : AndroidViewModel(app) {
 
+    companion object {
+       var mFavoriteSongs =  mutableListOf<SongItem>()
+    }
+
     val relatedSongs: MutableLiveData<Resource<MutableList<SongItem>>> = MutableLiveData()
     val favoriteSongs = playerRepository.getAllFavSong()
 
-    fun getSongRelated(id: String, type: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+
+    fun getSongRelated(id: String, type: String) = viewModelScope.launch(Dispatchers.IO) {
         relatedSongs.postValue(Resource.Loading())
         try {
-            if (!type) {
-                if (hasInternetConnection(this@PlayerViewModel)) {
-                    val response = playerRepository.getSongRelated(id)
-                    relatedSongs.postValue(handleSongRelatedResponse(response))
-                } else {
-                    relatedSongs.postValue(Resource.Error("No internet connection"))
+            when (type) {
+                EXTRA_MY_SONG -> relatedSongs.postValue(getMySongList())
+                EXTRA_SONG_FAVORITE -> {
+//                    songList = mFavoriteSongs
+                    relatedSongs.postValue(Resource.Success(mFavoriteSongs))
                 }
-            } else {
-                relatedSongs.postValue(getMySongList())
+                else -> {
+                    if (hasInternetConnection(this@PlayerViewModel)) {
+                        val response = playerRepository.getSongRelated(id)
+                        relatedSongs.postValue(handleSongRelatedResponse(response))
+                    } else {
+                        relatedSongs.postValue(Resource.Error("No internet connection"))
+                    }
+                }
             }
         } catch (t: Throwable) {
             when (t) {
@@ -61,7 +74,7 @@ class PlayerViewModel(
         return Resource.Error(response.message())
     }
 
-    fun getMySongList(): Resource<MutableList<SongItem>> {
+    private fun getMySongList(): Resource<MutableList<SongItem>> {
         songList.clear()
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,

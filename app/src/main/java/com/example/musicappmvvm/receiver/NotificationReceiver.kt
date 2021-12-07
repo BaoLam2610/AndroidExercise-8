@@ -14,6 +14,7 @@ import com.example.musicappmvvm.model.SongItem
 import com.example.musicappmvvm.shared.SharedInstance
 import com.example.musicappmvvm.ui.main.fragments.ChartFragment
 import com.example.musicappmvvm.ui.main.fragments.FavoriteFragment
+import com.example.musicappmvvm.ui.main.fragments.MySongFragment
 import com.example.musicappmvvm.ui.main.fragments.NowPlayingFragment
 import com.example.musicappmvvm.ui.play.PlayerActivity
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.isPlaying
@@ -104,6 +105,7 @@ class NotificationReceiver : BroadcastReceiver() {
         ChartFragment.filterAdapter.notifyDataSetChanged()
         SongInfoFragment.adapter?.notifyDataSetChanged()
         FavoriteFragment.favAdapter?.notifyDataSetChanged()
+        MySongFragment.mySongAdapter?.notifyDataSetChanged()
 
     }
 

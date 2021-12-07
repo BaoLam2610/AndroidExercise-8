@@ -12,6 +12,7 @@ import com.example.musicappmvvm.databinding.FragmentNowPlayingBinding
 import com.example.musicappmvvm.ui.main.fragments.ChartFragment.Companion.chartAdapter
 import com.example.musicappmvvm.ui.main.fragments.ChartFragment.Companion.filterAdapter
 import com.example.musicappmvvm.ui.main.fragments.FavoriteFragment.Companion.favAdapter
+import com.example.musicappmvvm.ui.main.fragments.MySongFragment.Companion.mySongAdapter
 import com.example.musicappmvvm.ui.play.PlayerActivity
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.isPlaying
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.musicService
@@ -19,6 +20,7 @@ import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.position
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.songList
 import com.example.musicappmvvm.utils.Constants.EXTRA_SONG_NOW_PLAYING
 import com.example.musicappmvvm.utils.Constants.EXTRA_TYPE
+import com.example.musicappmvvm.utils.Constants.getImageSongFromPath
 import com.example.musicappmvvm.utils.Constants.setSongPosition
 
 class NowPlayingFragment : Fragment() {
@@ -47,6 +49,7 @@ class NowPlayingFragment : Fragment() {
             chartAdapter.notifyDataSetChanged()
             filterAdapter.notifyDataSetChanged()
             favAdapter?.notifyDataSetChanged()
+            mySongAdapter?.notifyDataSetChanged()
         }
 
         binding.btnPrevious.setOnClickListener {
@@ -58,6 +61,7 @@ class NowPlayingFragment : Fragment() {
             chartAdapter.notifyDataSetChanged()
             filterAdapter.notifyDataSetChanged()
             favAdapter?.notifyDataSetChanged()
+            mySongAdapter?.notifyDataSetChanged()
         }
 
         binding.root.setOnClickListener {
@@ -85,7 +89,7 @@ class NowPlayingFragment : Fragment() {
             if (songList[position].online)
                 Glide.with(requireContext()).load(songList[position].thumbnail).into(binding.ivSong)
             else
-                binding.ivSong.setImageResource(R.drawable.skittle_chan)
+                binding.ivSong.setImageBitmap(getImageSongFromPath(songList[position].thumbnail!!))
         else
             binding.ivSong.setImageResource(R.drawable.skittle_chan)
         binding.tvTitle.text = songList[position].name

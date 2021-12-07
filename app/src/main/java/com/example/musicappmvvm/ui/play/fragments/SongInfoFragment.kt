@@ -8,18 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.musicappmvvm.adapter.RelatedAdapter
 import com.example.musicappmvvm.adapter.SongAdapter
 import com.example.musicappmvvm.databinding.FragmentSongInfoBinding
 import com.example.musicappmvvm.model.SongItem
 import com.example.musicappmvvm.ui.main.fragments.ChartFragment
 import com.example.musicappmvvm.ui.play.PlayerActivity
-import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.position
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.songList
 import com.example.musicappmvvm.ui.play.PlayerViewModel
-import com.example.musicappmvvm.utils.Constants
 import com.example.musicappmvvm.utils.Constants.BUNDLE_SONG
+import com.example.musicappmvvm.utils.Constants.EXTRA_MY_SONG
+import com.example.musicappmvvm.utils.Constants.EXTRA_SONG_FAVORITE
 import com.example.musicappmvvm.utils.Constants.RELATED
 import com.example.musicappmvvm.utils.Resource
 
@@ -52,12 +50,18 @@ class SongInfoFragment : Fragment() {
 
         getSong = (activity as PlayerActivity).getSong!!
 
-        val type = (activity as PlayerActivity).intent.hasExtra(Constants.EXTRA_MY_SONG)
-        viewModel.getSongRelated(getSong.id, type)
+        val typeMySong = (activity as PlayerActivity).intent.hasExtra(EXTRA_MY_SONG)
+        val typeFavSong = (activity as PlayerActivity).intent.hasExtra(EXTRA_SONG_FAVORITE)
+        viewModel.getSongRelated(getSong.id, when{
+            typeMySong -> EXTRA_MY_SONG
+            typeFavSong -> EXTRA_SONG_FAVORITE
+            else -> ""
+        })
         viewModel.relatedSongs.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     response.data?.let {
+                        songList = it
                         adapter?.setData(it)
                         (activity as PlayerActivity).setupRelatedRecyclerView()
                     }

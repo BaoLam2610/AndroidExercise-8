@@ -16,6 +16,7 @@ import com.example.musicappmvvm.ui.play.PlayerActivity
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.musicService
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.position
 import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.songList
+import com.example.musicappmvvm.utils.Constants
 import com.example.musicappmvvm.utils.Constants.CHANNEL_ID
 import com.example.musicappmvvm.utils.Constants.CLOSE
 import com.example.musicappmvvm.utils.Constants.CURRENT_SONG
@@ -98,8 +99,11 @@ class MusicService : Service() {
         GlobalScope.launch(Dispatchers.Default) {
             var bitmap = if (song.thumbnail != null)
                 try {
-                    Glide.with(applicationContext).asBitmap()
-                        .load(song.thumbnail).submit().get()
+                    if (song.online)
+                        Glide.with(applicationContext).asBitmap()
+                            .load(song.thumbnail).submit().get()
+                    else
+                        Constants.getImageSongFromPath(song.thumbnail)
                 } catch (e: Exception) {
                     null
                 }
@@ -116,7 +120,7 @@ class MusicService : Service() {
                     .setStyle(
                         androidx.media.app.NotificationCompat.MediaStyle()
                             .setMediaSession(mediaSession.sessionToken)
-                            .setShowActionsInCompactView(0,1,2)
+                            .setShowActionsInCompactView(0, 1, 2)
                     )
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -154,6 +158,7 @@ class MusicService : Service() {
         }
 
     }
+
     fun setupSeekBarWithSong() {
         runnable = Runnable {
             PlayerActivity.binding.tvDurationPlayed.text =

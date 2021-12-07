@@ -15,6 +15,8 @@ import com.example.musicappmvvm.model.SongItem
 import com.example.musicappmvvm.ui.main.MusicActivity
 import com.example.musicappmvvm.ui.main.MusicViewModel
 import com.example.musicappmvvm.ui.play.PlayerActivity
+import com.example.musicappmvvm.ui.play.PlayerActivity.Companion.songList
+import com.example.musicappmvvm.ui.play.PlayerViewModel.Companion.mFavoriteSongs
 import com.example.musicappmvvm.utils.Constants
 import com.example.musicappmvvm.utils.Constants.CURRENT_SONG
 import com.example.musicappmvvm.utils.Constants.FAVORITE
@@ -38,7 +40,8 @@ class FavoriteFragment : Fragment() {
         viewModel = (activity as MusicActivity).viewModel
         favAdapter = SongAdapter(requireContext(), FAVORITE)
         viewModel.favoriteSongs.observe(viewLifecycleOwner) {
-            favAdapter?.setData(it as MutableList<SongItem>)
+            mFavoriteSongs = it as MutableList<SongItem>
+            favAdapter?.setData(it)
             setupRecyclerView()
         }
         val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(
